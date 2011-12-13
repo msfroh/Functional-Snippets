@@ -1,10 +1,8 @@
 import functions.Function0;
 import functions.Function1;
 import functions.Function2;
-import sun.org.mozilla.javascript.internal.Function;
 import tuples.Tuple2;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,6 +52,9 @@ private static <R, T1> Function2<List<R>, List<T1>, Function1<R, T1>> buildTrans
                 return i1 + i2;
             }
         };
+        System.out.println("4 + 5 = " + add.apply(4, 5));
+        System.out.println("4 + 5 = " + add.curry().apply(4).apply(5));
+
         System.out.println("3 + 8 = " + add.apply(3, 8));
 
         // Let's do a partial application, which curries our binary function down to a unary function.

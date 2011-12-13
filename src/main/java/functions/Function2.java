@@ -1,6 +1,5 @@
 package functions;
 
-import sun.org.mozilla.javascript.internal.Function;
 import tuples.Tuple2;
 
 public abstract class Function2<R, T1, T2> {
@@ -32,6 +31,14 @@ public abstract class Function2<R, T1, T2> {
         };
     }
 
+    public Function2<R, T2, T1> flip() {
+        return new Function2<R, T2, T1>() {
+            public R apply(final T2 i1, final T1 i2) {
+                return Function2.this.apply(i2, i1);
+            }
+        };
+    }
+
     public final Function1<R, Tuple2<T1, T2>> tupled() {
         return new Function1<R, Tuple2<T1, T2>>() {
             @Override
@@ -40,6 +47,4 @@ public abstract class Function2<R, T1, T2> {
             }
         };
     }
-
-    
 }

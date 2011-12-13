@@ -1,0 +1,5 @@
+This is a small library to demonstrate some functional programming ideas in Java for my blog. The first post
+is at http://mikefroh.blogspot.com/2011/12/intro-to-functional-programming-with.html, and will eventually contain
+a table of contents linking to the other blog posts on the subject.
+
+For a real functional programming library in Java, check out http://functionaljava.org/.
