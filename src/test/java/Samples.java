@@ -2,10 +2,13 @@ import functions.Function0;
 import functions.Function1;
 import functions.Function2;
 import tuples.Tuple2;
+import utils.ListUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static java.lang.String.format;
 
 public class Samples {
     public static <R, T1> List<R> transformList(final List<T1> inputList, final Function1<R, T1> f) {
@@ -16,7 +19,7 @@ public class Samples {
         return outputList;
     }
 
-private static final Function2 rawTransformList = new Function2<List, List, Function1>() {
+    private static final Function2 rawTransformList = new Function2<List, List, Function1>() {
         @Override
         public List apply(List i1, Function1 i2) {
             List outputList = new ArrayList();
@@ -26,10 +29,11 @@ private static final Function2 rawTransformList = new Function2<List, List, Func
             return outputList;
         }
     };
-private static <R, T1> Function2<List<R>, List<T1>, Function1<R, T1>> buildTransformList(Class<R> returnClass,
-                                                                                        Class<T1> inputClass) {
-    return rawTransformList;
-}
+
+    private static <R, T1> Function2<List<R>, List<T1>, Function1<R, T1>> buildTransformList(Class<R> returnClass,
+                                                                                             Class<T1> inputClass) {
+        return rawTransformList;
+    }
 
 
     public static void main(String[] args) {
@@ -45,7 +49,7 @@ private static <R, T1> Function2<List<R>, List<T1>, Function1<R, T1>> buildTrans
                 + transformList(Arrays.asList(1, 2, 3, 4, 5), timesTwo));
 
         // Here is a simple binary function. It takes two integers, and returns an integer.
-        // In Haskell, we would write its signature like Integer => Integer => Integer
+        // In Haskell, we would write its signature like Integer -> Integer -> Integer
         final Function2<Integer, Integer, Integer> add = new Function2<Integer, Integer, Integer>() {
             @Override
             public Integer apply(Integer i1, Integer i2) {
@@ -83,12 +87,24 @@ private static <R, T1> Function2<List<R>, List<T1>, Function1<R, T1>> buildTrans
                     }
                 };
         System.out.println("applyFunctionAndAddResultToOriginalValue.apply(5, timesTwo) = " +
-            applyFunctionAndAddResultToOriginalValue.apply(5, timesTwo));
+                applyFunctionAndAddResultToOriginalValue.apply(5, timesTwo));
+
+        final Function1<Integer, String> stringLength = new Function1<Integer, String>() {
+            @Override
+            public Integer apply(String i1) {
+                return i1.length();
+            }
+        };
 
         Function2<List<Integer>, List<Integer>, Function1<Integer, Integer>> transformIntListToIntList =
                 buildTransformList(Integer.class, Integer.class);
         System.out.println("transformIntListToIntList.apply([1, 2, 3], timesTwo) = "
                 + transformIntListToIntList.apply(Arrays.asList(1, 2, 3), timesTwo));
+
+        /* System.out.println("transformIntListToIntList.apply([1, 2, 3], stringLength) = "
+                + transformIntListToIntList.apply(Arrays.asList(1, 2, 3), stringLength));
+         */
+
 
         final Function2<List, List, Function1> rawTransformList = new Function2<List, List, Function1>() {
             @Override
@@ -100,8 +116,13 @@ private static <R, T1> Function2<List<R>, List<T1>, Function1<R, T1>> buildTrans
                 return outputList;
             }
         };
+        // The following outputs: rawTransformList.apply([1,2,3], timesTwo) = [2, 4, 6]
         System.out.println("rawTransformList.apply([1,2,3], timesTwo) = "
                 + rawTransformList.apply(Arrays.asList(1, 2, 3), timesTwo));
+
+// The following produces a ClassCastException
+        System.out.println("rawTransformList.apply([1,2,3], stringLength) = "
+                + rawTransformList.apply(Arrays.asList(1, 2, 3), stringLength));
 
 
         // Here's a nullary function, which behaves like a constant value (unless it has side-effects, which
@@ -138,5 +159,19 @@ private static <R, T1> Function2<List<R>, List<T1>, Function1<R, T1>> buildTrans
         final Function1<Integer, Tuple2<Integer, Integer>> tupledAdd = add.tupled();
         System.out.println("9 + 2 = " + tupledAdd.apply(new Tuple2<Integer, Integer>(9, 2)));
 
+
+        // Let's test some folds
+        final List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
+        final Function2<Integer, Integer, Integer> noisyAdd = new Function2<Integer, Integer, Integer>() {
+            @Override
+            public Integer apply(Integer i1, Integer i2) {
+                System.out.println(format("Add called with arguments %d and %d", i1, i2));
+                return i1 + i2;
+            }
+        };
+        System.out.println("foldLeft result is " +
+                ListUtils.foldLeft(Integer.class, Integer.class).apply(noisyAdd, 0, list));
+        System.out.println("foldRight result is " +
+                ListUtils.foldRight(Integer.class, Integer.class).apply(noisyAdd, 0, list));
     }
 }

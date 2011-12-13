@@ -32,7 +32,7 @@ public class ListUtils {
         public Object apply(final Function2 func, final Object seed, final List list) {
             Object accumulated = seed;
             for (Object t : list) {
-                accumulated = func.apply(accumulated, list);
+                accumulated = func.apply(accumulated, t);
             }
             return accumulated;
         }
