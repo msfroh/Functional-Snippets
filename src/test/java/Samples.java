@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.String.format;
+import static tuples.TupleUtils.tuple;
 
 public class Samples {
     public static <R, T1> List<R> transformList(final List<T1> inputList, final Function1<R, T1> f) {
@@ -104,6 +105,9 @@ public class Samples {
         /* System.out.println("transformIntListToIntList.apply([1, 2, 3], stringLength) = "
                 + transformIntListToIntList.apply(Arrays.asList(1, 2, 3), stringLength));
          */
+        System.out.println("map(stringLength, [\"a\",\"bb\",\"ccc\"]) = " +
+                ListUtils.map(Integer.class, String.class).apply(stringLength,
+                Arrays.asList("a", "bb", "ccc")));
 
 
         final Function2<List, List, Function1> rawTransformList = new Function2<List, List, Function1>() {
@@ -120,9 +124,9 @@ public class Samples {
         System.out.println("rawTransformList.apply([1,2,3], timesTwo) = "
                 + rawTransformList.apply(Arrays.asList(1, 2, 3), timesTwo));
 
-// The following produces a ClassCastException
-        System.out.println("rawTransformList.apply([1,2,3], stringLength) = "
-                + rawTransformList.apply(Arrays.asList(1, 2, 3), stringLength));
+        // The following produces a ClassCastException
+//        System.out.println("rawTransformList.apply([1,2,3], stringLength) = "
+//                + rawTransformList.apply(Arrays.asList(1, 2, 3), stringLength));
 
 
         // Here's a nullary function, which behaves like a constant value (unless it has side-effects, which
@@ -156,9 +160,9 @@ public class Samples {
         System.out.println("5 + 3 = " + addFive.apply(lazyThree));
         System.out.println("But this one is much faster: 4 + 3 = " + add.apply(4).apply(lazyThree));
 
+        // Test tupling a function
         final Function1<Integer, Tuple2<Integer, Integer>> tupledAdd = add.tupled();
-        System.out.println("9 + 2 = " + tupledAdd.apply(new Tuple2<Integer, Integer>(9, 2)));
-
+        System.out.println("9 + 2 = " + tupledAdd.apply(tuple(9, 2)));
 
         // Let's test some folds
         final List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);

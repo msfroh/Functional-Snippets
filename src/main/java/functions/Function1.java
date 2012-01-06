@@ -30,7 +30,7 @@ public abstract class Function1<R, T1> {
     public final Function1<R, Tuple1<T1>> tupled() {
         return new Function1<R, Tuple1<T1>>() {
             public R apply(Tuple1<T1> i1) {
-                return Function1.this.apply(i1._1());
+                return Function1.this.apply(i1._1);
             }
         };
     }
