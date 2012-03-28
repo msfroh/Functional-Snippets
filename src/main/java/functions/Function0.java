@@ -1,30 +1,20 @@
 package functions;
 
 public abstract class Function0<R> {
+    private R value = null;
+
     /**
-     * @return a value
+     * The get() method should be synchronized, to ensure that we don't call
+     * evaluate unnecessarily in a multithreaded setting.
+     *
+     * @return the result of evaluating -- results will be cached
      */
-    public abstract R apply();
-
-    public static <R> Function0<R> value(final R val) {
-        return new Function0<R>() {
-            @Override
-            public R apply() {
-                return val;
-            }
-        };
+    public final synchronized R get() {
+        if (value == null) {
+            value = evaluate();
+        }
+        return value;
     }
 
-    public static <R> Function0<R> lazy(final Function0<R> init) {
-        return new Function0<R>() {
-            private R value;
-            @Override
-            public synchronized R apply() {
-                if (value == null) {
-                    value = init.apply();
-                }
-                return value;
-            }
-        };
-    }
+    public abstract R evaluate();
 }
