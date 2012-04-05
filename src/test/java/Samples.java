@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static java.lang.String.format;
-import static tuples.TupleUtils.tuple;
+//import static tuples.TupleUtils.tuple;
 
 public class Samples {
     public static <R, T1> List<R> transformList(final List<T1> inputList, final Function1<R, T1> f) {
@@ -166,7 +166,7 @@ public class Samples {
 
         // Test tupling a function
         final Function1<Integer, Tuple2<Integer, Integer>> tupledAdd = add.tupled();
-        System.out.println("9 + 2 = " + tupledAdd.apply(tuple(9, 2)).get());
+//        System.out.println("9 + 2 = " + tupledAdd.apply(tuple(9, 2)).get());
 
         // Let's test some folds
         final List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
