@@ -5,6 +5,7 @@ import functions.Function2;
 
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * User: froh
@@ -16,10 +17,57 @@ public abstract class Option<T> implements AugmentedIterable<T> {
 
     public abstract boolean isDefined();
 
+    public final T getOrElse(T defaultVal) {
+        return isDefined() ? get() : defaultVal;
+    }
+
     // Specialize return types for these AugmentedIterable methods
-    public abstract <R> Option<R> map(Function1<R, T> f);
-    public abstract <R> Option<R> flatMap(Function1<? extends AugmentedIterable<R>, T> f);
-    public abstract Option<T> filter(Function1<Boolean, T> predicate);
+    public final <R> Option<R> map(Function1<R, T> f) {
+        return isDefined() ? option(f.evaluate(get())) : Option.<R>none();
+    }
+
+    public final <R> Option<R> flatMap(Function1<? extends Iterable<R>, T> f) {
+        if (!isDefined()) {
+            return none();
+        }
+
+        Iterable<? extends R> val = f.evaluate(get());
+        Iterator<? extends R> iter = val.iterator();
+        if (iter.hasNext()) {
+            Option<R> result = option(iter.next());
+            if (iter.hasNext()) {
+                // Option.flatMap only works with functions that return at most
+                // one element.
+                throw new RuntimeException("Function passed to Option flatMap " +
+                        "returns more than one element");
+            }
+            return result;
+        }
+        return none();
+    }
+
+    public final Option<T> filter(Function1<Boolean, T> predicate) {
+        if (isDefined() && predicate.evaluate(get())) {
+            return this;
+        }
+        return none();
+    }
+
+    @Override
+    public final <R> R foldLeft(final Function2<R, R, T> f, final R seed) {
+        return isDefined() ? f.evaluate(seed, get()) : seed;
+    }
+
+    @Override
+    public final <R> R foldRight(final Function2<R, T, R> f, final R seed) {
+        return isDefined() ? f.evaluate(get(), seed) : seed;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return isDefined() ? Collections.singleton(get()).iterator() :
+                Collections.<T>emptySet().iterator();
+    }
 
     public static <T> Option<T> option(T value) {
         if (value == null) {
@@ -28,11 +76,13 @@ public abstract class Option<T> implements AugmentedIterable<T> {
         return some(value);
     }
 
+    // Factory method to return the singleton None instance
     @SuppressWarnings({"unchecked"})
     public static <T> Option<T> none() {
         return NONE;
     }
 
+    // Factory method to return a non-empty Some instance
     public static <T> Option<T> some(final T value) {
         return new Some<T>(value);
     }
@@ -43,42 +93,12 @@ public abstract class Option<T> implements AugmentedIterable<T> {
 
         @Override
         public Object get() {
-            throw new RuntimeException("get() called on None");
+            throw new NoSuchElementException("get() called on None");
         }
 
         @Override
         public boolean isDefined() {
             return false;
-        }
-
-        @Override
-        public Option map(final Function1 f) {
-            return this;
-        }
-
-        @Override
-        public Object foldRight(final Function2 f, final Object seed) {
-            return seed;
-        }
-
-        @Override
-        public Object foldLeft(final Function2 f, final Object seed) {
-            return seed;
-        }
-
-        @Override
-        public Iterator iterator() {
-            return Collections.emptyIterator();
-        }
-
-        @Override
-        public Option flatMap(final Function1 f) {
-            return this;
-        }
-
-        @Override
-        public Option filter(final Function1 predicate) {
-            return this;
         }
 
         @Override
@@ -94,7 +114,6 @@ public abstract class Option<T> implements AugmentedIterable<T> {
             this.value = value;
         }
 
-
         @Override
         public T get() {
             return value;
@@ -103,41 +122,6 @@ public abstract class Option<T> implements AugmentedIterable<T> {
         @Override
         public boolean isDefined() {
             return true;
-        }
-
-        @Override
-        public <R> Option<R> map(final Function1<R, T> f) {
-            return option(f.evaluate(value));
-        }
-
-        @Override
-        public <R> R foldLeft(final Function2<R, R, T> f, final R seed) {
-            return f.evaluate(seed, value);
-        }
-
-        @Override
-        public <R> R foldRight(final Function2<R, T, R> f, final R seed) {
-            return f.evaluate(value, seed);
-        }
-
-        @Override
-        public <R> Option<R> flatMap(final Function1<? extends AugmentedIterable<R>, T> f) {
-            // Option can only flatMap with functions that return other options
-            AugmentedIterable<? extends R> val = f.evaluate(value);
-            if (!(val instanceof Option)) {
-                throw new RuntimeException("Function passed to Option flatMap returns " + val.getClass() + " not Option");
-            }
-            return (Option<R>) val;
-        }
-
-        @Override
-        public Option<T> filter(final Function1<Boolean, T> predicate) {
-            return predicate.evaluate(value) ? this : Option.<T>none();
-        }
-
-        @Override
-        public Iterator<T> iterator() {
-            return Collections.singleton(value).iterator();
         }
 
         @Override

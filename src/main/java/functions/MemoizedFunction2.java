@@ -10,8 +10,7 @@ public abstract class MemoizedFunction2<R, T1, T2>
             return new MemoizedFunction1<R, T2>() {
                 @Override
                 public R evaluate(final Function1<R, T2> self, final T2 i2) {
-                    return MemoizedFunction2.this.evaluate(MemoizedFunction2.this,
-                            i1, i2);
+                    return MemoizedFunction2.this.evaluate(i1, i2);
                 }
             };
         }

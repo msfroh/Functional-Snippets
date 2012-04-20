@@ -1,5 +1,7 @@
 package functions;
 
+import collections.Option;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -24,6 +26,21 @@ public class FunctionUtils {
             @Override
             public R evaluate(Function1<R, T> self, T i1) {
                 return map.get(i1);
+            }
+        };
+    }
+
+    public static <R, T> Function1<Option<R>, Option<T>>
+        optional(final Function1<R, T> f) {
+        return new Function1<Option<R>, Option<T>>() {
+            @Override
+            public Option<R> evaluate(final Function1<Option<R>,
+                    Option<T>> self, final Option<T> i1) {
+                //noinspection LoopStatementThatDoesntLoop
+                for (T t : i1) {
+                    return Option.option(f.evaluate(f, t));
+                }
+                return Option.none();
             }
         };
     }
