@@ -29,14 +29,4 @@ public abstract class Function3<R, T1, T2, T3>
     public final Function0<R> apply(final T1 i1, final T2 i2, final T3 i3) {
         return apply(i1).apply(i2).apply(i3);
     }
-
-
-//    public final Function1<R, Tuple3<T1, T2, T3>> tupled() {
-//        return new Function1<R, Tuple3<T1, T2, T3>>() {
-//            @Override
-//            public R apply(Tuple3<T1, T2, T3> i1) {
-//                return Function3.this.apply(i1._1, i1._2, i1._3);
-//            }
-//        };
-//    }
 }

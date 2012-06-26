@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static java.lang.String.format;
+import static tuples.TupleUtils.tuple;
+import static tuples.TupleUtils.tupled;
 //import static tuples.TupleUtils.tuple;
 
 public class Samples {
@@ -165,8 +167,8 @@ public class Samples {
         System.out.println("But this one is much faster: 4 + 3 = " + add.apply(4).apply(lazyThree).get());
 
         // Test tupling a function
-        final Function1<Integer, Tuple2<Integer, Integer>> tupledAdd = add.tupled();
-//        System.out.println("9 + 2 = " + tupledAdd.apply(tuple(9, 2)).get());
+        final Function1<Integer, Tuple2<Integer, Integer>> tupledAdd = tupled(add);
+        System.out.println("9 + 2 = " + tupledAdd.apply(tuple(9, 2)).get());
 
         // Let's test some folds
         final List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
@@ -193,13 +195,13 @@ public class Samples {
             }
         };
         long startFib = System.currentTimeMillis();
-        for (int i = 1; i < 30; i++) {
+        for (int i = 1; i < 35; i++) {
             fibonacci.apply(i).get();
         }
         System.out.println("Fib took " + (System.currentTimeMillis() - startFib) + "ms");
         startFib = System.currentTimeMillis();
         Function1<Integer, Integer> memoizedFibonacci = MemoizationUtils.memoize(fibonacci);
-        for (int i = 1; i < 30; i++) {
+        for (int i = 1; i < 35; i++) {
             memoizedFibonacci.apply(i).get();
         }
         System.out.println("MemoizedFib took " + (System.currentTimeMillis() - startFib) + "ms");
