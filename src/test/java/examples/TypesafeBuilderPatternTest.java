@@ -17,6 +17,7 @@ public class TypesafeBuilderPatternTest {
         TypesafeBuilderPattern.Person michael =
                 build(
                         person().withAge(32).withName("Michael").makeAwesome()
+                                .withFriends("Jim", "Bob", "Bill")
                 );
         System.out.println(michael);
     }

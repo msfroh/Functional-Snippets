@@ -3,12 +3,10 @@ package collections;
 import org.junit.Test;
 import tuples.Tuple2;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * User: msfroh
@@ -70,13 +68,15 @@ public class ImmutableHashTrieMapTest {
         assertEquals(keys.size(), numHits);
     }
 
+    private static final int size = 1000000;
     @Test
     public void testLargeRemoval() throws Exception {
+        final long start = System.currentTimeMillis();
         ImmutableHashTrieMap<Integer, Integer> hash =
                 ImmutableHashTrieMap.empty();
-        List<Integer> list = new ArrayList<Integer>(100000);
-        for (int i = 0; i < 100000; i++) {
-            list.add(i);
+        List<Integer> list = new ArrayList<Integer>(size);
+        for (int i = 0; i < size; i++) {
+            list.add(i * 1000 + i);
         }
         Collections.shuffle(list);
         for (Integer i : list) {
@@ -87,5 +87,26 @@ public class ImmutableHashTrieMapTest {
             hash = hash.remove(i);
         }
         assertEquals(ImmutableHashTrieMap.<Integer, Integer>empty(), hash);
+        System.out.println(System.currentTimeMillis() - start);
+    }
+
+    @Test
+    public void testJavaHashmap() throws Exception {
+        final long start = System.currentTimeMillis();
+        Map<Integer, Integer> hash = new HashMap<Integer, Integer>();
+        List<Integer> list = new ArrayList<Integer>(size);
+        for (int i = 0; i < size; i++) {
+            list.add(i * 1000 + i);
+        }
+        Collections.shuffle(list);
+        for (Integer i : list) {
+            hash.put(i, i);
+        }
+        Collections.shuffle(list);
+        for (Integer i : list) {
+            hash.remove(i);
+        }
+        assertTrue(hash.size() == 0);
+        System.out.println(System.currentTimeMillis() - start);
     }
 }

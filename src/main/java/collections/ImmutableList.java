@@ -163,6 +163,19 @@ public abstract class ImmutableList<T> implements AugmentedIterable<T> {
         };
     }
 
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("[");
+        boolean first = true;
+        for (T elem : this) {
+            if (!first) builder.append(", ");
+            builder.append(elem);
+            first = false;
+        }
+        builder.append(']');
+        return builder.toString();
+    }
+
     private static final EmptyList EMPTY_LIST = new EmptyList();
 
     private static class EmptyList extends ImmutableList {
