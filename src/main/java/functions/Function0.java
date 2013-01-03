@@ -1,6 +1,8 @@
 package functions;
 
-public abstract class Function0<R> {
+import java.util.concurrent.Callable;
+
+public abstract class Function0<R> implements Callable<R> {
     private R value = null;
 
     /**
@@ -17,4 +19,9 @@ public abstract class Function0<R> {
     }
 
     public abstract R evaluate();
+
+    @Override
+    public R call() throws Exception {
+        return get();
+    }
 }

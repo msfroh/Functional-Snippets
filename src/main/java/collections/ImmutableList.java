@@ -25,7 +25,7 @@ public abstract class ImmutableList<T> implements AugmentedIterable<T> {
 
 
     public ImmutableList<T> prepend(T element) {
-        return new NonEmptyList<T>(element, this);
+        return new NonEmptyList<>(element, this);
     }
 
     public static <T> ImmutableList<T> nil() {

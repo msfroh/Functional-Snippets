@@ -8,7 +8,7 @@ import java.io.PrintStream;
 import static functions.LoggingFunction1.addLogging;
 import static org.junit.Assert.assertEquals;
 import static tuples.TupleUtils.tupled;
-import static tuples.TupleUtils.untupled;
+import static tuples.TupleUtils.untupled2;
 
 /**
  * User: msfroh
@@ -51,7 +51,7 @@ public class LoggingFunction1Test {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         PrintStream outputStream = new PrintStream(bytes);
         Function2<Integer, Integer, Integer> loggingAdd =
-                untupled(addLogging(tupled(add), outputStream, "add"));
+                untupled2(addLogging(tupled(add), outputStream, "add"));
         loggingAdd.apply(4, 5).get();
         assertEquals("add called with (4,5)\n" +
                 "add returned 9\n",

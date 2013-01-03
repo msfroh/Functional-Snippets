@@ -84,7 +84,7 @@ public abstract class Option<T> implements AugmentedIterable<T> {
 
     // Factory method to return a non-empty Some instance
     public static <T> Option<T> some(final T value) {
-        return new Some<T>(value);
+        return new Some<>(value);
     }
 
     private static None NONE = new None();

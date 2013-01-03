@@ -3,3 +3,5 @@ is at http://mikefroh.blogspot.com/2011/12/intro-to-functional-programming-with.
 a table of contents linking to the other blog posts on the subject.
 
 For a real functional programming library in Java, check out http://functionaljava.org/.
+
+This code is licensed under the MIT license. For details see the LICENSE file.

@@ -25,6 +25,10 @@ public abstract class Function2<R, T1, T2> extends Curryable<T1, Function1<R,T2>
         return apply(i1).apply(i2);
     }
 
+    public final Function0<R> apply(final Function0<T1> i1, final Function0<T2> i2) {
+        return apply(i1).apply(i2);
+    }
+
     public Function2<R, T2, T1> flip() {
         return new Function2<R, T2, T1>() {
             public R evaluate(Function2<R, T2, T1> self, final T2 i1, final T1 i2) {
