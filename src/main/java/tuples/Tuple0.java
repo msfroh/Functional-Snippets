@@ -6,9 +6,9 @@ package tuples;
  * Time: 3:04 PM
  */
 public enum Tuple0 {
-    INSTANCE;
+  INSTANCE;
 
-    public String toString() {
-        return "()";
-    }
+  public String toString() {
+    return "()";
+  }
 }

@@ -12,7 +12,5 @@ public abstract class Curryable<T, F> {
         return curry().apply(t).get();
     }
 
-    public F apply(Function0<T> t) {
-        return curry().apply(t.get()).get();
-    }
+    public abstract F apply(Function0<T> t);
 }
